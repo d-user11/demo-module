@@ -12,24 +12,32 @@ variable "cluster_name" {
 variable "db_remote_state_bucket" {
   description = "The name of the S3 bucket for the database's remote state"
   type        = string
+  default     = ""
 }
 
 variable "db_remote_state_key" {
   description = "The path for the database's remote state in S3"
   type        = string
+  default     = ""
 }
 
 variable "instance_type" {
   description = "The type of EC2 Instances to run (e.g. t2.micro)"
-  type = string
+  type        = string
 }
 
 variable "min_size" {
   description = "The minimum number of EC2 Instances in the ASG"
-  type = number
+  type        = number
 }
 
 variable "max_size" {
   description = "The maximum number of EC2 Instances in the ASG"
-  type = number
+  type        = number
+}
+
+variable "custom_tags" {
+  description = "Custom tags to set on the Instances in the ASG"
+  type        = map(string)
+  default     = {}
 }

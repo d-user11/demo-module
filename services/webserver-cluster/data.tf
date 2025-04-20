@@ -10,6 +10,7 @@ data "aws_subnets" "default" {
 }
 
 data "terraform_remote_state" "db" {
+  count = var.db_remote_state_bucket != "" ? 1 : 0
   backend = "s3"
   config = {
     bucket = var.db_remote_state_bucket
