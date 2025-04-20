@@ -92,13 +92,13 @@ resource "aws_launch_template" "example" {
   user_data = base64encode(templatefile("${path.module}/script.sh", {
     server_port = var.server_port,
     db_address = (
-      data.terraform_remote_state.db.outputs.address != ""
-      ? data.terraform_remote_state.db.outputs.address
+      length(data.terraform_remote_state.db) == 1
+      ? one(concat(data.terraform_remote_state.db[*].outputs.address))
       : "db doesn't exist"
     ),
     db_port = (
-      data.terraform_remote_state.db.outputs.port != ""
-      ? data.terraform_remote_state.db.outputs.port
+      length(data.terraform_remote_state.db) == 1
+      ? one(concat(data.terraform_remote_state.db[*].outputs.port))
       : "db doesn't exist"
     ),
   }))
