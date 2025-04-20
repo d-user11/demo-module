@@ -86,10 +86,11 @@ resource "aws_lb_target_group" "asg" {
 }
 
 resource "aws_launch_template" "example" {
-  image_id               = "ami-084568db4383264d4"
+  image_id               = var.ami
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.instance.id]
-  user_data = base64encode(templatefile("${path.module}/script.sh", {
+  user_data = base64encode(templatefile("${path.module}/user-data.sh", {
+    server_text = var.server_text
     server_port = var.server_port,
     db_address = (
       length(data.terraform_remote_state.db) == 1
