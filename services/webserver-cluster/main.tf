@@ -88,7 +88,7 @@ resource "aws_lb_target_group" "asg" {
 resource "aws_launch_template" "example" {
   image_id               = var.ami
   instance_type          = var.instance_type
-  vpc_security_group_ids = [aws_security_group.instance.id]
+  vpc_security_group_ids = [aws_security_group.cluster_instance.id]
   user_data = base64encode(templatefile("${path.module}/user-data.sh", {
     server_text = var.server_text
     server_port = var.server_port,
@@ -145,13 +145,13 @@ resource "aws_autoscaling_group" "example" {
 
 }
 
-resource "aws_security_group" "instance" {
+resource "aws_security_group" "cluster_instance" {
   name = "${var.cluster_name}-instance-sg"
 }
 
 resource "aws_security_group_rule" "allow_server_http_inbound" {
   type              = "ingress"
-  security_group_id = aws_security_group.instance.id
+  security_group_id = aws_security_group.cluster_instance.id
   from_port         = var.server_port
   to_port           = var.server_port
   protocol          = local.tcp_protocol
@@ -160,9 +160,14 @@ resource "aws_security_group_rule" "allow_server_http_inbound" {
 
 resource "aws_security_group_rule" "allow_ssh_inbound" {
   type              = "ingress"
-  security_group_id = aws_security_group.instance.id
+  security_group_id = aws_security_group.cluster_instance.id
   from_port         = 22
   to_port           = 22
   protocol          = local.tcp_protocol
   cidr_blocks       = local.all_ips
+}
+
+moved {
+  from = aws_security_group.instance
+  to   = aws_security_group.cluster_instance
 }
