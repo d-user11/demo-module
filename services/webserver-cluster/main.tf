@@ -107,7 +107,6 @@ resource "aws_launch_template" "example" {
 }
 
 resource "aws_autoscaling_group" "example" {
-  name                = "${var.cluster_name}-${aws_launch_template.example.name}"
   vpc_zone_identifier = data.aws_subnets.default.ids
 
   launch_template {
@@ -120,19 +119,9 @@ resource "aws_autoscaling_group" "example" {
   min_size = var.min_size
   max_size = var.max_size
 
-  # Wait for at least this many instances to pass health checks before
-  # considering the ASG deployment complete
-  min_elb_capacity = var.min_size
-
-  # When replacing this ASG, create the replacement first, and only delete the
-  # original after
-  lifecycle {
-    create_before_destroy = true
-  }
-
   tag {
     key                 = "Name"
-    value               = var.cluster_name
+    value               = "${var.cluster_name}-asg"
     propagate_at_launch = true
   }
 
