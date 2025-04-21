@@ -166,8 +166,3 @@ resource "aws_security_group_rule" "allow_ssh_inbound" {
   protocol          = local.tcp_protocol
   cidr_blocks       = local.all_ips
 }
-
-moved {
-  from = aws_security_group.instance
-  to   = aws_security_group.cluster_instance
-}
