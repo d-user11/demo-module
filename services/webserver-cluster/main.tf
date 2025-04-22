@@ -110,7 +110,8 @@ resource "aws_autoscaling_group" "example" {
   vpc_zone_identifier = data.aws_subnets.default.ids
 
   launch_template {
-    id = aws_launch_template.example.id
+    id      = aws_launch_template.example.id
+    version = aws_launch_template.example.latest_version
   }
 
   target_group_arns = [aws_lb_target_group.asg.arn]
