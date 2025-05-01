@@ -9,3 +9,8 @@ output "service_endpoint" {
   )
   description = "The K8S Service endpoint"
 }
+
+output "status" {
+  value       = local.status
+  description = "The K8S status"
+}
