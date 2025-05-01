@@ -24,4 +24,8 @@ variable "environment_variables" {
   default     = {}
 }
 
-
+variable "service_type" {
+  description = "What type of service to create"
+  type = string
+  default = "LoadBalancer"
+}

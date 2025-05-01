@@ -49,7 +49,7 @@ resource "kubernetes_service" "app" {
   }
 
   spec {
-    type = "LoadBalancer"
+    type = var.service_type
     port {
       port        = 80
       target_port = var.container_port
