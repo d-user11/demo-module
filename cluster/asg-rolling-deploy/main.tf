@@ -1,9 +1,20 @@
+data "aws_ec2_instance_type" "instance" {
+  instance_type = var.instance_type
+}
+
 resource "aws_launch_template" "example" {
   image_id               = var.ami
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.instance.id]
   user_data              = var.user_data
   update_default_version = true
+
+  lifecycle {
+    precondition {
+      condition = data.aws_ec2_instance_type.instance.free_tier_eligible
+      error_message = "${var.instance_type} is not part of the AWS Free Tier!"
+    }
+  }
 }
 
 resource "aws_autoscaling_group" "example" {
@@ -44,6 +55,12 @@ resource "aws_autoscaling_group" "example" {
     }
   }
 
+  lifecycle {
+    postcondition {
+      condition = length(self.availability_zones) > 1
+      error_message = "You must use more than one AZ for high availability!"
+    }
+  }
 }
 
 resource "aws_security_group" "instance" {

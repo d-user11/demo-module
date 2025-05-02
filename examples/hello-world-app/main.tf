@@ -33,7 +33,7 @@ module "hello-world-app" {
   subnet_ids  = data.aws_subnets.default.ids
   server_port = 8080
 
-  instance_type = "t2.micro"
+  instance_type = "m4.large"
   ami           = data.aws_ami.ubuntu.id
 
   min_size = 3
