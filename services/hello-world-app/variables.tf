@@ -7,13 +7,13 @@ variable "server_port" {
 variable "db_remote_state_bucket" {
   description = "The name of the S3 bucket for the database's remote state"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "db_remote_state_key" {
   description = "The path for the database's remote state in S3"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "instance_type" {
@@ -69,9 +69,20 @@ variable "environment" {
 variable "vpc_id" {
   description = "The VPC to deploy to"
   type        = string
+  default     = null
 }
 
 variable "subnet_ids" {
   description = "The subnet IDs to deploy to"
   type        = list(string)
+  default     = null
+}
+
+variable "mysql_config" {
+  description = "The config for the MYSQL db"
+  type = object({
+    address = string
+    port    = number
+  })
+  default = null
 }

@@ -2,7 +2,7 @@ resource "aws_lb_target_group" "asg" {
   name     = "hello-world-${var.environment}"
   port     = var.server_port
   protocol = "HTTP"
-  vpc_id   = var.vpc_id
+  vpc_id   = local.vpc_id
 
   health_check {
     path                = "/"
@@ -41,11 +41,13 @@ module "asg" {
   user_data = base64encode(templatefile("${path.module}/user-data.sh", {
     server_text = var.server_text,
     server_port = var.server_port,
+    db_address  = local.mysql_config.address
+    db_port     = local.mysql_config.port
   }))
 
   min_size          = var.min_size
   max_size          = var.max_size
-  subnet_ids        = var.subnet_ids
+  subnet_ids        = local.subnet_ids
   target_group_arn  = [aws_lb_target_group.asg.arn]
   health_check_type = "ELB"
 
@@ -55,5 +57,5 @@ module "asg" {
 module "alb" {
   source     = "../../networking/alb"
   alb_name   = "hello-world-${var.environment}"
-  subnet_ids = var.subnet_ids
+  subnet_ids = local.subnet_ids
 }

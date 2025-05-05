@@ -26,14 +26,15 @@ data "aws_ami" "ubuntu" {
 module "hello-world-app" {
   source = "../../services/hello-world-app"
 
-  environment = "test"
+  environment = var.environment
   server_text = "Hello World App"
 
-  vpc_id      = data.aws_vpc.default.id
-  subnet_ids  = data.aws_subnets.default.ids
-  server_port = 8080
+  # vpc_id      = data.aws_vpc.default.id
+  # subnet_ids  = data.aws_subnets.default.ids
+  mysql_config = var.mysql_config
+  server_port  = 8080
 
-  instance_type = "m4.large"
+  instance_type = "t2.micro"
   ami           = data.aws_ami.ubuntu.id
 
   min_size = 3
